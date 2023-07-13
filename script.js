@@ -61,7 +61,26 @@ inputRegion.addEventListener('input', function (event) {
     event.preventDefault();
     inputMilage.focus();
   }
-})
+});
+
+
+function generateToken() {
+  const user = 'admin_integration';
+  const pass = 'j5Fe7Au8Kn';
+  const stamp = 1483634723;
+  const age = 999999999;
+  const formattedDate = new Date().toISOString();
+
+  const passHash = SparkMD5.hash(pass);
+  const saltedHash = SparkMD5.hash(`${stamp}:${age}:${passHash}`);
+  const token = btoa(`${user}:${stamp}:${age}:${saltedHash}`);
+  return token;
+}
+
+
+
+
+
 
 
 var evaluateButton = document.getElementById('evaluateButton');
@@ -71,22 +90,27 @@ evaluateButton.addEventListener('click', function () {
   var regionValue = inputRegion.value;
   var milageValue = inputMilage.value;
 
+  const token = generateToken();
+
+  console.log(token);
+
   var data = {
-    number: numberValue,
-    region: regionValue,
-    milage: milageValue
+    queryType: "GRZ",
+    query: numberValue + regionValue,
   };
 
-  var jsonData = JSON.stringify(data);
 
-  console.log(jsonData)
 
-  fetch('/url-to-your-endpoint', {
+  fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/default/_make', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      "Accept": "application/json",
+      "Authorization": "AR-REST " + token
     },
-    body: jsonData
+    body: {
+      makeReportRequest: data
+    }
   })
     .then(function (response) {
       return response.json();
