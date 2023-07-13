@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="hero">
+    <div class="container">
+      <div class="hero__wrapper">
+        <h1>Получите оценку стоимости вашего автомобиля</h1>
+        <div class="hero-form">
+          <h2>Введите номер своего автомобиля</h2>
+          <p>Например: А123АА, а также текущий пробег. И получите оценку за 30 секунд.</p>
+          <form action="#" id="formAvtoPrice">
+            <div class="form-item form-number">
+              <div class="form-number--icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                  <path d="M2.22266 5.73438H17.7783V15.2685H2.22266V5.73438Z" fill="#FF0043" />
+                  <path d="M2.22266 5.73438H17.7783V8.99604H2.22266V5.73438Z" fill="#D2D2D2" />
+                  <path d="M2.22266 8.99609H17.7783V12.0069H2.22266V8.99609Z" fill="#2D41F5" />
+                </svg>
+                <input type="text" placeholder="A 006 АА" id="inputNumber">
+              </div>
+              <span class="line"></span>
+              <input type="number" placeholder="999" id="inputRegion" max="3" min="2">
+            </div>
+            <div class="form-item">
+              <input type="number" placeholder="Пробег" id="inputMilage">
+            </div>
+            <button type="button" id="evaluateButton">ОЦЕНИТЬ АВТО</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+
+</html>
