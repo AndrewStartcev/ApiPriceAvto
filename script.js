@@ -101,7 +101,7 @@ evaluateButton.addEventListener('click', function () {
 
 
 
-  fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/default/_make', {
+  fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
