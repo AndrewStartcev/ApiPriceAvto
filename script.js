@@ -85,9 +85,8 @@ var evaluateButton = document.getElementById('evaluateButton');
 
 evaluateButton.addEventListener('click', function () {
 
-  var numberValue = inputNumber.value.replace(/\s/g, '');
-  var regionValue = inputRegion.value;
-  var milageValue = inputMilage.value;
+  const numberValue = inputNumber.value.replace(/\s/g, '');
+  const regionValue = inputRegion.value;
 
   const user = 'admin_integration@pr_maker';
   const pass = 'j5Fe7Au8Kn';
@@ -105,8 +104,8 @@ evaluateButton.addEventListener('click', function () {
 
       const reportUrl = 'https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make';
       const requestData = {
-        queryType: 'GRZ',
-        query: numberValue + regionValue,
+        'queryType': 'GRZ',
+        'query': numberValue + regionValue,
       };
       const reportOptions = {
         method: 'POST',
@@ -115,6 +114,7 @@ evaluateButton.addEventListener('click', function () {
           'Accept': 'application/json',
           'Authorization': 'AR-REST ' + token
         },
+        mode: 'no-cors',
         body: JSON.stringify({
           makeReportRequest: requestData
         })
@@ -124,18 +124,17 @@ evaluateButton.addEventListener('click', function () {
         .then(response => response.json())
         .then(reportData => {
           const processRequestUid = reportData.process_request_uid;
-
           const resultUrl = `https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/${processRequestUid}?_content=true&_detailed=true`;
           const resultOptions = {
             headers: {
-              'Authorization': 'AR-REST ' + token
-            }
+              'Accept': 'application/json',
+              'Authorization': token //'AR-REST ' +
+            },
           };
 
           fetch(resultUrl, resultOptions)
             .then(response => response.json())
             .then(resultData => {
-              // Обработка результата
               console.log(resultData);
             })
             .catch(error => {
@@ -153,42 +152,3 @@ evaluateButton.addEventListener('click', function () {
       alert('Ошибка получения токена');
     });
 });
-
-
-// evaluateButton.addEventListener('click', function () {
-//   var numberValue = inputNumber.value.replace(/\s/g, '');
-//   var regionValue = inputRegion.value;
-//   var milageValue = inputMilage.value;
-
-//   const token = generateToken();
-
-//   console.log(token);
-
-//   var data = {
-//     queryType: "GRZ",
-//     query: numberValue + regionValue,
-//   };
-
-
-
-//   fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make', {
-//     method: 'POST',
-    // headers: {
-    //   'Content-Type': 'application/json',
-    //   "Accept": "application/json",
-    //   "Authorization": "AR-REST " + token
-    // },
-    // body: {
-    //   makeReportRequest: data
-    // }
-//   })
-//     .then(function (response) {
-//   return response.json();
-// })
-//   .then(function (result) {
-//     console.log(result);
-//   })
-//   .catch(function (error) {
-//     console.error('Error:', error);
-//   });
-// });
