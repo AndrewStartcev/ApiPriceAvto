@@ -55,8 +55,6 @@ inputNumber.addEventListener('keydown', function (event) {
 inputRegion.addEventListener('input', function (event) {
   var cursorPosition = event.target.value.length;
 
-  console.log(cursorPosition)
-
   if (cursorPosition >= 3) {
     event.preventDefault();
     inputMilage.focus();
@@ -86,29 +84,76 @@ function generateToken() {
 var evaluateButton = document.getElementById('evaluateButton');
 
 evaluateButton.addEventListener('click', function () {
-  const user = 'admin_integration';
+
+  var numberValue = inputNumber.value.replace(/\s/g, '');
+  var regionValue = inputRegion.value;
+  var milageValue = inputMilage.value;
+
+  const user = 'admin_integration@pr_maker';
   const pass = 'j5Fe7Au8Kn';
   const age = 999999999;
   const currentDate = new Date();
   currentDate.setMonth(currentDate.getMonth() - 3);
   const formattedDate = currentDate.toISOString();
 
-  const url = `https://b2b-api.spectrumdata.ru/b2b/api/v1/dev/token?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}&ishash=false&dateStr=${encodeURIComponent(formattedDate)}&age=${age}`;
+  const tokenUrl = `https://b2b-api.spectrumdata.ru/b2b/api/v1/dev/token?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}&ishash=false&dateStr=${encodeURIComponent(formattedDate)}&age=${age}`;
 
-  // Отправка данных на сервер
-  // Например, с использованием fetch:
-  fetch(url)
-    .then(response => {
-      console.log(response)
-      // Обработка ответа от сервера
-      // ...
+  fetch(tokenUrl)
+    .then(response => response.json())
+    .then(tokenData => {
+      const token = tokenData.token;
+
+      const reportUrl = 'https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make';
+      const requestData = {
+        queryType: 'GRZ',
+        query: numberValue + regionValue,
+      };
+      const reportOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'AR-REST ' + token
+        },
+        body: JSON.stringify({
+          makeReportRequest: requestData
+        })
+      };
+
+      fetch(reportUrl, reportOptions)
+        .then(response => response.json())
+        .then(reportData => {
+          const processRequestUid = reportData.process_request_uid;
+
+          const resultUrl = `https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/${processRequestUid}?_content=true&_detailed=true`;
+          const resultOptions = {
+            headers: {
+              'Authorization': 'AR-REST ' + token
+            }
+          };
+
+          fetch(resultUrl, resultOptions)
+            .then(response => response.json())
+            .then(resultData => {
+              // Обработка результата
+              console.log(resultData);
+            })
+            .catch(error => {
+              console.log(error);
+              alert('Ошибка получения результата отчета');
+            });
+        })
+        .catch(error => {
+          console.log(error);
+          alert('Ошибка создания отчета');
+        });
     })
     .catch(error => {
-      console.log(error)
-      // Обработка ошибок
-      // ...
+      console.log(error);
+      alert('Ошибка получения токена');
     });
 });
+
 
 // evaluateButton.addEventListener('click', function () {
 //   var numberValue = inputNumber.value.replace(/\s/g, '');
@@ -128,14 +173,14 @@ evaluateButton.addEventListener('click', function () {
 
 //   fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make', {
 //     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       "Accept": "application/json",
-//       "Authorization": "AR-REST " + token
-//     },
-//     body: {
-//       makeReportRequest: data
-//     }
+    // headers: {
+    //   'Content-Type': 'application/json',
+    //   "Accept": "application/json",
+    //   "Authorization": "AR-REST " + token
+    // },
+    // body: {
+    //   makeReportRequest: data
+    // }
 //   })
 //     .then(function (response) {
 //   return response.json();
