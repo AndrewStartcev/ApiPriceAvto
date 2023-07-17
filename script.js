@@ -107,17 +107,15 @@ evaluateButton.addEventListener('click', function () {
         'queryType': 'GRZ',
         'query': numberValue + regionValue,
       };
+      console.log(token)
       const reportOptions = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'AR-REST ' + token
         },
         mode: 'no-cors',
-        body: JSON.stringify({
-          makeReportRequest: requestData
-        })
+        body: JSON.stringify(requestData)
       };
 
       fetch(reportUrl, reportOptions)
@@ -142,8 +140,9 @@ evaluateButton.addEventListener('click', function () {
               alert('Ошибка получения результата отчета');
             });
         })
-        .catch(error => {
+        .catch((error, response) => {
           console.log(error);
+          console.log(response.headers.get('Authorization'))
           alert('Ошибка создания отчета');
         });
     })
