@@ -79,46 +79,71 @@ function generateToken() {
 
 
 
-
+// https://b2b-api.spectrumdata.ru/b2b/api/v1/dev/token?user=test%40test&pass=123&ishash=false&dateStr=2017-01-05T16%3A45%3A23Z&age=999999999
 
 
 
 var evaluateButton = document.getElementById('evaluateButton');
 
 evaluateButton.addEventListener('click', function () {
-  var numberValue = inputNumber.value.replace(/\s/g, '');
-  var regionValue = inputRegion.value;
-  var milageValue = inputMilage.value;
+  const user = 'admin_integration';
+  const pass = 'j5Fe7Au8Kn';
+  const age = 999999999;
+  const currentDate = new Date();
+  currentDate.setMonth(currentDate.getMonth() - 3);
+  const formattedDate = currentDate.toISOString();
 
-  const token = generateToken();
+  const url = `https://b2b-api.spectrumdata.ru/b2b/api/v1/dev/token?user=${encodeURIComponent(user)}&pass=${encodeURIComponent(pass)}&ishash=false&dateStr=${encodeURIComponent(formattedDate)}&age=${age}`;
 
-  console.log(token);
-
-  var data = {
-    queryType: "GRZ",
-    query: numberValue + regionValue,
-  };
-
-
-
-  fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      "Accept": "application/json",
-      "Authorization": "AR-REST " + token
-    },
-    body: {
-      makeReportRequest: data
-    }
-  })
-    .then(function (response) {
-      return response.json();
+  // Отправка данных на сервер
+  // Например, с использованием fetch:
+  fetch(url)
+    .then(response => {
+      console.log(response)
+      // Обработка ответа от сервера
+      // ...
     })
-    .then(function (result) {
-      console.log(result);
-    })
-    .catch(function (error) {
-      console.error('Error:', error);
+    .catch(error => {
+      console.log(error)
+      // Обработка ошибок
+      // ...
     });
 });
+
+// evaluateButton.addEventListener('click', function () {
+//   var numberValue = inputNumber.value.replace(/\s/g, '');
+//   var regionValue = inputRegion.value;
+//   var milageValue = inputMilage.value;
+
+//   const token = generateToken();
+
+//   console.log(token);
+
+//   var data = {
+//     queryType: "GRZ",
+//     query: numberValue + regionValue,
+//   };
+
+
+
+//   fetch('https://b2b-api.spectrumdata.ru/b2b/api/v1/user/reports/report_ts_price_test/_make', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//       "Accept": "application/json",
+//       "Authorization": "AR-REST " + token
+//     },
+//     body: {
+//       makeReportRequest: data
+//     }
+//   })
+//     .then(function (response) {
+//   return response.json();
+// })
+//   .then(function (result) {
+//     console.log(result);
+//   })
+//   .catch(function (error) {
+//     console.error('Error:', error);
+//   });
+// });
